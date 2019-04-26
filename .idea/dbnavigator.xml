@@ -25,6 +25,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="ee385b99-a0df-4cf1-85e4-7b03ccddf376">
+        <schema name="awesome" object-types="view, constraint, procedure, table, dataset trigger, column, index, function" />
         <schema name="test" object-types="view, table" />
       </connection>
     </loaded-nodes>
@@ -47,6 +48,11 @@
       </filter>
       <filter id="1001538f-22b2-4bd3-8324-f28ffbd68e31" name="4" temporary="false" custom-name="false" type="basic" join-type="AND">
         <condition column="id" operator="=" value="4" active="true" />
+      </filter>
+    </filter-actions>
+    <filter-actions connection-id="ee385b99-a0df-4cf1-85e4-7b03ccddf376" dataset="awesome.users" active-filter-id="EMPTY_FILTER">
+      <filter id="998b4ec4-8d4e-4d46-8f0e-21caebe875e8" name="1" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="id" operator="=" value="1" active="true" />
       </filter>
     </filter-actions>
     <filter-actions connection-id="ee385b99-a0df-4cf1-85e4-7b03ccddf376" dataset="test.test" active-filter-id="EMPTY_FILTER">
