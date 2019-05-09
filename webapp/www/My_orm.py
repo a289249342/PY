@@ -3,7 +3,7 @@
 
 __author__ = 'ARASHI'
 
-import logging, aiomysql
+import logging, aiomysql, asyncio
 
 
 def log(sql, args=()):
@@ -27,11 +27,17 @@ async def create_pool(loop, **kw):
     )
 
 
+async def destory_pool():
+    if __pool is not None:
+        __pool.close()
+        await __pool.wait_closed()
+
+
 async def select(sql, args, size=None):
     log(sql, args)
     global __pool
-    async with __pool as conn:
-        async with conn.cursor.cursor(aiomysql.DictCursor) as cur:
+    async with __pool.get() as conn:
+        async with conn.cursor(aiomysql.DictCursor) as cur:
             await cur.execute(sql.replace('?', '%s'), args or ())
             if size:
                 rs = await cur.fetchmany(size)
@@ -52,7 +58,7 @@ async def execute(sql, args, autocommit=True):
                 affected = cur.rowcount
             if not autocommit:
                 await conn.commit()
-        except BaseException:
+        except BaseException as e:
             if not autocommit:
                 await conn.rollback()
             raise
@@ -163,7 +169,7 @@ class Model(dict, metaclass=ModelMetaclass):
                 value = field.default() if callable(field.default) else field.default
                 logging.debug('using default value for %s:%s' % (key, str(value)))
                 setattr(self, key, value)
-            return value
+        return value
 
     @classmethod
     async def findAll(cls, where=None, args=None, **kw):
