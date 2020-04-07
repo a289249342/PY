@@ -26,7 +26,6 @@
     <loaded-nodes>
       <connection connection-id="ee385b99-a0df-4cf1-85e4-7b03ccddf376">
         <schema name="awesome" object-types="view, table" />
-        <schema name="test" object-types="view, table" />
       </connection>
     </loaded-nodes>
   </component>
@@ -98,8 +97,7 @@
           <host value="localhost" />
           <port value="3306" />
           <database value="test" />
-          <os-authentication value="false" />
-          <empty-authentication value="false" />
+          <type value="USER_PASSWORD" />
           <user value="root" />
           <deprecated-pwd value="ODg0NDQz" />
         </database>
@@ -137,7 +135,7 @@
           <max-connection-pool-size value="7" />
           <alternative-statement-delimiter value="" />
         </details>
-        <object-filters hide-empty-schemas="false">
+        <object-filters hide-empty-schemas="false" hide-pseudo-columns="false">
           <object-type-filter use-master-settings="true">
             <object-type name="SCHEMA" enabled="true" />
             <object-type name="USER" enabled="true" />
