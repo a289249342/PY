@@ -3,9 +3,11 @@
 __author__ = 'ARASHI'
 
 import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib
 
 in_path = r'E:/BC/data/da/'
-total_data = pd.read_excel(in_path + '271.xls', header=0, encoding='gbk')
+total_data = pd.read_excel(in_path + '2715.xls', header=0, encoding='gbk')
 t = total_data.iloc[:, 4:6]
 
 
@@ -43,21 +45,23 @@ def per(p):
     return 1 - st.iloc[0, 1] / 100.0
 
 
-t_YH = []
-a = list(map(lambda x: x / 20.0, range(600, 670)))
-b = list(map(lambda x: x / 10.0, range(10, 61)))
+def ca():
+    t_yh = []
+    a = list(map(lambda x: x / 20.0, range(600, 670)))
+    b = list(map(lambda x: x / 10.0, range(10, 61)))
 
-for b0 in b:
-    yh = []
-    for a0 in a:
-        yh.append(test(a0, b0))
-    t_YH.append(yh)
-t = pd.DataFrame(t_YH)
+    for b0 in b:
+        yh = []
+        for a0 in a:
+            yh.append(test(a0, b0))
+        t_yh.append(yh)
+    d = pd.DataFrame(t_yh)
+    name = 'YH3410.xls'
+    d.to_excel(in_path + 'des_' + name)
+    d = d[d != 0].describe(percentiles=[.1, .2, .3, .4, .5, .6, .7, .8, .9])
+    d.to_excel(in_path + name)
+
+
 print(t)
-D = t[t != 0].describe(percentiles=[.1, .2, .3, .4, .5, .6, .7, .8, .9])
-name = 'YH3410.xls'
-
-D.to_excel(in_path + 'des1_' + name)
-D = D.T
-D.to_excel(in_path + 'des2_' + name)
-t.to_excel(in_path + name)
+draw = t.plot()
+plt.show()

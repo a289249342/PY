@@ -112,3 +112,15 @@ gl['俄罗斯RTS温度'] = gl.apply(lambda x: (2 * x[23] + x[24]) / 3, axis=1)
 gl['时间'] = gl['时间'].dt.date
 print(gl)
 gl.to_excel(in_path + 'T_am.xlsx', index=0)
+
+# 28温度计
+# def temp_ca(x):
+#     te = 0
+#     if x[i] != 0 and x[i + 1] != 0:
+#         te = (4 * x[i] + x[i + 1]) / 5
+#     return te
+#
+#
+# for i in range(1, 32, 4)[::-1]:
+#     gl.insert(i + 3, gl.columns[i + 2] + '28', gl.apply(temp_ca, axis=1))
+# gl['时间'] = gl['时间'].dt.date

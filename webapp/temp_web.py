@@ -21,48 +21,50 @@ try:
     matplotlib.rcParams['font.sans-serif'] = ['SimHei']
     matplotlib.rcParams['font.family'] = 'sans-serif'
     in_path = r'E:/Temp/'
+    timestamp = str(int(time.time()))  # 时间戳，解决部分浏览器缓存不刷新的问题
     conf = configparser.ConfigParser()
     conf.read(in_path + 'config.ini')
     # G：global 全球温度计  A ：A股温度计
-    G_data = pd.read_excel(in_path + 'G_data.xlsx', header=0, index_col=0)
-    A_data = pd.read_excel(in_path + 'A_data.xlsx', header=0, index_col=0)
+    G_data = pd.read_excel(in_path + 'G_data.xlsx', header=0, index_col=0, encoding='gbk')  # 读取数据
+    A_data = pd.read_excel(in_path + 'A_data.xlsx', header=0, index_col=0, encoding='gbk')
     G_data = G_data['2000':]
     A_data = A_data['2005':]
     # G_data.index = G_data.index.date
     # A_data.index = A_data.index.date
     # G_data.index.name = '时间'
     # A_data.index.name = '时间'
-    update_temp = 0
-    back_day = conf.getint('conf', 'back')  # back默认-5，意为重新读取前5日的数据，防止源数据更新不及时带来的错误
+    update_temp = 1  # 是否更新数据，调试时可设置为否|boolean
+    back_day = -5  # back默认-5，意为重新读取前5日的数据，防止源数据更新不及时带来的错误
+    # back_day = conf.getint('conf', 'back')  # back默认-5，意为重新读取前5日的数据，防止源数据更新不及时带来的错误
     end_day = datetime.date.today()
-    # end_day = datetime.date(2020, 5, 26)
+    # end_day = datetime.date(2020, 6, 10)
     if update_temp == 1:
-        w.start()
-        d_g = w.tdays(G_data.index.date[back_day], end_day, "TradingCalendar=AMEX")
+        w.start()  # 更新wind数据
+        d_g = w.tdays(G_data.index.date[back_day], end_day, "TradingCalendar=AMEX")  # 全球部分使用美国证券交易所日历  
         d_a = w.tdays(A_data.index.date[back_day], end_day)
         day_g = d_g.Times
         day_a = d_a.Times
-        if len(day_g) > 1:
+        if len(day_g) > 1:  # 全球部分更新前一日数据，最新数据要等所有市场收盘后才有
             day_g.pop(-1)
             for dd_g in day_g:
                 # priceAdj=F;  前复权
-                dg_to_list = []
-                s = "tradeDate=" + dd_g.strftime("%Y%m%d") + ";cycle=D;ShowBlank=0"
+                data_global_tolist = []  # 将每个交易日数据添加到数组
+                date_set = "tradeDate=" + dd_g.strftime("%Y%m%d") + ";cycle=D;ShowBlank=0"
                 data = w.wss("DJI.GI,IXIC.GI,SPX.GI,FTSE.GI,FCHI.GI,GDAXI.GI,N225.GI,HSI.HI,000985.CSI,881003.WI",
-                             "pb_lf,pe_ttm,close", s)
+                             "pb_lf,pe_ttm,close", date_set)
                 for d2 in data.Data:
                     for d3 in d2:
-                        dg_to_list.append(d3)
-                G_data.loc[datetime64(dd_g)] = dg_to_list
+                        data_global_tolist.append(d3)
+                G_data.loc[datetime64(dd_g)] = data_global_tolist
         if day_a:
             for dd_a in day_a:
-                da_to_list = []
-                s = "tradeDate=" + dd_a.strftime("%Y%m%d") + ";cycle=D;ShowBlank=0"
-                data = w.wss("000985.CSI,881003.WI", "pb_lf,pe_ttm,close", s)
+                data_A_tolist = []
+                date_set = "tradeDate=" + dd_a.strftime("%Y%m%d") + ";cycle=D;ShowBlank=0"
+                data = w.wss("000985.CSI,881003.WI", "pb_lf,pe_ttm,close", date_set)
                 for d4 in data.Data:
                     for d5 in d4:
-                        da_to_list.append(d5)
-                A_data.loc[datetime64(dd_a)] = da_to_list
+                        data_A_tolist.append(d5)
+                A_data.loc[datetime64(dd_a)] = data_A_tolist
 
 
     def cal_temp(da, axr=0):  # 将估值数据百分位化
@@ -93,7 +95,7 @@ try:
         a_list.append(cal_temp(list(A_data.iloc[:, i5])))
     g_std = []
     a_std = []
-    for i1 in range(10):  # 计算第一个非零值并作为基准
+    for i1 in range(10):  # 计算第一个估值数据非零值并作为基准
         l1 = list(G_data.iloc[:, i1])
         l2 = list(G_data.iloc[:, i1 + 10])
         for i2 in range(len(l1)):
@@ -136,8 +138,8 @@ try:
             else:
                 ca.append(tem[i3])
                 ta.append(tem2[i3])
-        tem = ca
-        tem2 = ta
+        tem = ca  # ca计算温度
+        tem2 = ta  # ta计算价格
         if ca[0] == 0:
             count += 0.1
             ta[0] = 0
@@ -173,12 +175,13 @@ try:
     g['全球温度'], g['全球价格'] = zip(*g.apply(cal_g_temp, axis=1))
     a['中证温度'] = a.apply(lambda x: x[0] * 0.8 + x[2] * 0.2, axis=1)
     a['全A温度'] = a.apply(lambda x: x[1] * 0.8 + x[3] * 0.2, axis=1)
-    c1 = 'tomato'
+    c1 = 'tomato'  # 绘图
     c2 = 'steelblue'
     c3 = 'g'
     # indigo dimgray steelblue peru
     style = {'size': 18, 'color': 'red'}
     a.rename(columns={'中证温度': 'A股温度'}, inplace=True)
+    # des用于展示数据分布，目前版本没有使用
     p = [.1, .2, .3, .4, .5, .6, .7, .8, .9]
     des = pd.DataFrame([a['A股温度'].describe(percentiles=p), g['全球温度'].describe(percentiles=p)])
     des = des.drop(['count', 'std'], axis=1)
@@ -186,20 +189,22 @@ try:
     des = """<h1>温度分布</h1>""" + des.to_html(float_format=lambda x: format(x, '.2f'))
 
 
-    def draw(draw_g, draw_a, name, draw_html=0):
+    def draw(draw_g, draw_a, name, draw_html=0):  # 绘图
+        # draw_g 全球数据    draw_a A股数据    name 生成文件的名字|str   draw_html 是否生成html文件|bool
         if draw_html == 1:
             da2 = draw_a.loc['2008':, 'A股温度']  # 此处为计算近期温度高点低点所用
             dg2 = draw_g.loc['2005':, '全球温度']
         else:
             da2 = draw_a['A股温度']
             dg2 = draw_g['全球温度']
+        # 绘制全球部分**********************************************************************************************
         fig, ax0 = plt.subplots()
         ax0.plot(draw_g.index, draw_g['全球价格'], c2, label='全球资产加权净值')
         ax = ax0.twinx()
         ax.plot(draw_g.index, draw_g['全球温度'], c1, label='全球温度')
         plt.grid(ls='--')
         plt.text(draw_g.index[-1], draw_g['全球温度'][-1], '%.2f°' % draw_g['全球温度'][-1], fontdict=style)
-        # 上为标注当前温度，下为标注高低点
+        # 上为标注当前温度，下为标注温度高低点
         plt.annotate('%.2f°' % dg2.max(), (dg2.idxmax(), dg2.max()), xytext=(dg2.idxmax(), dg2.max() * 1.02),
                      bbox=dict(boxstyle='round,pad=0.4', fc='red', ec='k', lw=1, alpha=0.8))
         plt.annotate('%.2f°' % (dg2.min()), (dg2.idxmin(), dg2.min()), xytext=(dg2.idxmin(), dg2.min() * 0.9),
@@ -219,10 +224,12 @@ try:
         # ax2.yaxis.grid(True, which='major')
         ax.yaxis.grid(True, which='minor', c=c3)
         buffer = BytesIO()
-        plt.savefig(name + 'g.png', dpi=100)
+        save_g_name = timestamp + name + 'g.png'
+        plt.savefig(save_g_name, dpi=100)
         plot_data = buffer.getvalue()
 
         # **********************************************************************************************************************
+        # 绘制A股部分
         fig2, ax3 = plt.subplots()
         ax3.plot(draw_a.index, draw_a['中证全指'], c2, label='中证全指价格指数')
         ax2 = ax3.twinx()
@@ -248,13 +255,16 @@ try:
         ax2.set_ylabel('温度', size=18)
         ax3.set_ylabel('价格', size=18)
         # plt.subplots_adjust(wspace=0)
-        # figure 保存为二进制文件
         buffer = BytesIO()
-        plt.savefig(name + 'a.png', dpi=100)
+        save_a_name = timestamp + name + 'a.png'
+        plt.savefig(save_a_name, dpi=100)
         plot_data2 = buffer.getvalue()
 
         if draw_html == 1:
-            root = "<title>估值温度计</title>"  # 标签页名
+            root = '''<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" /><title>估值温度计</title>
+            '''
             # 图像数据转化为 HTML 格式
             a_temp = a.iloc[-1, -2]
             g_temp = g.iloc[-1, -2]
@@ -263,9 +273,13 @@ try:
             # ims3 = base64.b64decode(plot_data3).decode()
             with open(in_path + 'jzfx.jpg', 'rb') as f:
                 ims3 = base64.b64encode(f.read()).decode()
-            imd = "{{url_for('static', filename = 'img/allg.png')}}"
-            imd2 = "{{url_for('static', filename = 'img/alla.png')}}"
+            imd = "static/img/" + save_g_name
+            imd2 = "static/img/" + save_a_name
             imd3 = "data:image/png;base64," + ims3
+            imd = "static/img/1608027529allg.png"
+            imd2 = "static/img/1608027529alla.png"
+            a_temp=44.96
+            g_temp=66.67
             im_a = """<h1>微信公众号：价值发现者  独家发布全球估值温度计 
     </h1><h2>最新温度为%.4s度（A股）, %.4s度（全球）| 点击图片可查看不同时间段温度计(今年以来)(近三年以来)</h2>  """ % (
                 a_temp,
@@ -279,18 +293,18 @@ try:
         id_g=document.getElementById('g')
         if (id_a.src.match("all"))
         {
-            id_a.src="static/img/thisyeara.png"
-            id_g.src="static/img/thisyearg.png";
+            id_a.src="static/img/%sthisyeara.png"
+            id_g.src="static/img/%sthisyearg.png";
         }
         else if (id_a.src.match("year")){
-        id_a.src="static/img/threea.png"
-        id_g.src="static/img/threeg.png"}
+        id_a.src="static/img/%sthreea.png"
+        id_g.src="static/img/%sthreeg.png"}
         else {
-        id_a.src="static/img/alla.png"
-        id_g.src="static/img/allg.png"}
+        id_a.src="static/img/%salla.png"
+        id_g.src="static/img/%sallg.png"}
     }
 
-        </script>"""
+        </script>""" % (timestamp, timestamp, timestamp, timestamp, timestamp, timestamp)
             s_des = """<div>
                         <div>说明：</div>
                         <ul style="font-size:14px">
@@ -309,26 +323,31 @@ try:
             tree.write('temp.html')
 
 
+    # 绘制全部、三年、今年的图并发送到服务器
     draw(g, a, 'all', 1)
     draw(g[str(g.index.date[-1].year - 3):], a[str(a.index.date[-1].year - 3):], 'three')
     draw(g[str(g.index.date[-1].year)], a[str(a.index.date[-1].year)], 'thisyear')
-    files = {'file': open('temp.html', 'rb')}
-    user_info = {'password': '884443'}
-    #r = requests.post("http://111.229.61.127:80/upload", data=user_info, files=files)
+    files = {'file': open('temp.html', 'rb'), 'file1': open('%salla.png' % timestamp, 'rb'),
+             'file2': open('%sthreea.png' % timestamp, 'rb'), 'file3': open('%sthisyeara.png' % timestamp, 'rb'),
+             'file4': open('%sallg.png' % timestamp, 'rb'), 'file5': open('%sthreeg.png' % timestamp, 'rb'),
+             'file6': open('%sthisyearg.png' % timestamp, 'rb')}
+    user_info = {'password': '344488', 'timestamp': timestamp}
+    test_time = 0
+    r = requests.post("http://111.229.61.127:80/upload", data=user_info, files=files)
+    if r.status_code != requests.codes.ok and test_time < 10:
+        r = requests.post("http://111.229.61.127:80/upload", data=user_info, files=files)
+        test_time += 1
+        time.sleep(2)
     # g['时间'] = g['时间'].dt.date
     G_data.index = G_data.index.date
     A_data.index = A_data.index.date
     g.index = g.index.date
     a.index = a.index.date
-    G_data.to_csv(in_path+'G1.csv')
-    A_data.to_csv(in_path+'A1.csv')
-    g.to_csv(in_path+'G2.csv')
-    a.to_csv(in_path+'A2.csv')
     G_data.to_excel(in_path + 'G_data.xlsx')
     A_data.to_excel(in_path + 'A_data.xlsx')
     g.to_excel(in_path + 'G_temp.xlsx', index=1)
     a.to_excel(in_path + 'A_temp.xlsx', index=1)
-    time.sleep(15)
+    time.sleep(10)
     webbrowser.open("http://111.229.61.127:80")
 except Exception as e:
     with open(in_path + 'log.txt', 'w') as f:
