@@ -1,8 +1,940 @@
-<!DOCTYPE html><html><head><meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel=icon href=/web/favicon.ico><title>集思录</title><link href=//cdn.staticfile.org/normalize/8.0.1/normalize.min.css rel=preload as=style><link href=//cdn.staticfile.org/normalize/8.0.1/normalize.min.css rel=stylesheet><link href=/web/theme/index.css rel=preload as=style><link href=/web/theme/index.css rel=stylesheet><link href=//cdn.staticfile.org/vue/2.6.10/vue.min.js rel=preload as=script><link href=//cdn.staticfile.org/vue-router/3.1.3/vue-router.min.js rel=preload as=script><link href=//cdn.staticfile.org/vuex/3.1.1/vuex.min.js rel=preload as=script><link href=//cdn.staticfile.org/axios/0.19.0/axios.min.js rel=preload as=script><link href=//cdn.staticfile.org/element-ui/2.12.0/index.js rel=preload as=script><link href=//cdn.staticfile.org/echarts/4.0.4/echarts.min.js rel=preload as=script><link href=/web/css/calendar.37555727.css rel=prefetch><link href=/web/css/data_cb.e95ddcc9.css rel=prefetch><link href=/web/css/data_cb_layout.b975539b.css rel=prefetch><link href=/web/css/data_dividend.2ee281c0.css rel=prefetch><link href=/web/css/forum.444c70ce.css rel=prefetch><link href=/web/css/positions.5f5f8a47.css rel=prefetch><link href=/web/js/404.85812a96.js rel=prefetch><link href=/web/js/500.4abbec5d.js rel=prefetch><link href=/web/js/calendar.bb5ee55f.js rel=prefetch><link href=/web/js/data_bond.d7f3d427.js rel=prefetch><link href=/web/js/data_cb.01119aa7.js rel=prefetch><link href=/web/js/data_cb_detail.5609e762.js rel=prefetch><link href=/web/js/data_cb_layout.257df68c.js rel=prefetch><link href=/web/js/data_cb~data_cb_layout.55915174.js rel=prefetch><link href=/web/js/data_cf.b3b778b9.js rel=prefetch><link href=/web/js/data_dividend.61cf385d.js rel=prefetch><link href=/web/js/data_sf.d5351029.js rel=prefetch><link href=/web/js/debug.1c9e1d25.js rel=prefetch><link href=/web/js/forum.6134bd22.js rel=prefetch><link href=/web/js/home.00734fdc.js rel=prefetch><link href=/web/js/login.3b7d0b1d.js rel=prefetch><link href=/web/js/positions.7e563470.js rel=prefetch><link href=/web/css/app.0dfdcace.css rel=preload as=style><link href=/web/js/app.8cb69d1d.js rel=preload as=script><link href=/web/js/chunk-vendors.518d56d2.js rel=preload as=script><link href=/web/css/app.0dfdcace.css rel=stylesheet></head><body><!--[if IE]>
-      <div class="browser_suggest">建设使用以下浏览器最新版本访问。
-          <a href="https://www.microsoft.com/zh-cn/edge" rel="noopener noreferrer" target="_blank"><img src="/static/img/edge.png" /> Edge</a>
-          <a href="https://www.google.cn/chrome/" rel="noopener noreferrer" target="_blank"><img src="/static/img/chrome.png" /> Chrome</a>
-          <a href="https://www.firefox.com.cn/" rel="noopener noreferrer" target="_blank"><img src="/static/img/firefox.png" /> Firefox</a>
-      </div>
-    <![endif]--><div id=app></div><script src=//cdn.staticfile.org/vue/2.6.10/vue.min.js></script><script src=//cdn.staticfile.org/vue-router/3.1.3/vue-router.min.js></script><script src=//cdn.staticfile.org/vuex/3.1.1/vuex.min.js></script><script src=//cdn.staticfile.org/axios/0.19.0/axios.min.js></script><script src=//cdn.staticfile.org/element-ui/2.12.0/index.js></script><script src=//cdn.staticfile.org/echarts/4.0.4/echarts.min.js></script><script src="//hq.sinajs.cn/?format=jsonp&callback=11&func=window.timestampdiff=Date.parse(new%20Date())/1000-hq_json_sys_time;&list=sys_time"></script><script src=/web/js/chunk-vendors.518d56d2.js></script><script src=/web/js/app.8cb69d1d.js></script></body></html>
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="renderer" content="webkit" />
+<meta name="force-rendering" content="webkit" />
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+<meta http-equiv="X-UA-Compatible" content="Chrome=1,IE=edge" />
+<title>LOF基金 - 集思录</title>
+<meta name="keywords" content="集思录,理财,可转债,债券,公司债,国债,新股,封闭基金,封基,ETF,LOF" />
+<meta name="description" content="集思录，一个以数据为本的投资社区"  />
+<base href="https://www.jisilu.cn/" />
 
+<link href="https://www.jisilu.cn/static/js/tablesorter/themes/blue/style.css?v=20211101" rel="stylesheet" type="text/css" />
+<link href="https://www.jisilu.cn/static/css/default/bootstrap3/bootstrap.min.css?v=20211101" rel="stylesheet" type="text/css" />
+<link href="https://www.jisilu.cn/static/css/default/jisilu_framework.css?v=20211101" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+var _B5950BB27FD3D2D876FE11D82E6766C8='';
+var G_POST_HASH=_B5950BB27FD3D2D876FE11D82E6766C8;
+var G_INDEX_SCRIPT = '';
+var G_SITE_NAME = '集思录';
+var G_BASE_URL = 'https://www.jisilu.cn';
+var G_STATIC_URL = 'https://www.jisilu.cn/static';
+var G_UPLOAD_URL = 'https://www.jisilu.cn/uploads';
+var G_USER_ID = 0;
+var G_USER_NAME = '';
+var G_UPLOAD_ENABLE = 'N';
+var G_QUICK_PUBLISH_HUMAN_VALID = '';
+var G_UNREAD_NOTIFICATION = 0;
+var G_NOTIFICATION_INTERVAL = 180000;
+var G_CAN_CREATE_TOPIC = '';
+var G_USER_FORBIDDEN = 0;
+
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?164fe01b1433a19b507595a43bf58262";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script src="https://www.jisilu.cn/static/js/jquery-3.4.1.min.js?v=20211101" type="text/javascript"></script>
+<script src="https://www.jisilu.cn/static/js/jquery.form.js?v=20211101" type="text/javascript"></script>
+<script src="https://www.jisilu.cn/static/js/jquery.browser.js?v=20211101" type="text/javascript"></script>
+<script src="https://www.jisilu.cn/static/js/jquery.cookie.js?v=20211101" type="text/javascript"></script>
+<script src="https://www.jisilu.cn/static/admin/js/jquery.autocomplete.js?v=20211101" type="text/javascript"></script>
+<script src="https://www.jisilu.cn/static/js/bootstrap3/bootstrap3-typeahead.min.js?v=20211101" type="text/javascript"></script>
+<script src="https://www.jisilu.cn/static/js/bootstrap3/bootstrap.min.js?v=20211101" type="text/javascript"></script>
+<script src="https://www.jisilu.cn/static/js/tablesorter/tablesorter.js?v=20211101" type="text/javascript"></script>
+<script src="https://www.jisilu.cn/static/js/hogan.min.js?v=20211101" type="text/javascript"></script>
+<script src="https://www.jisilu.cn/static/js/jisilu_common.js?v=20211101" type="text/javascript"></script>
+<script src="https://www.jisilu.cn/static/js/jisilu_hogan_template.js?v=20211101" type="text/javascript"></script>
+<script src="https://www.jisilu.cn/static/js/app/data.js?v=20211101" type="text/javascript"></script>
+<script src="https://www.jisilu.cn/static/js/simpleTableBuilder.js?v=20211101" type="text/javascript"></script>
+
+
+<style type="text/css">
+    .data_content {
+        margin: auto;
+        padding-bottom: 40px;
+        padding-left:10px;
+        padding-right:10px;
+        max-width: 2000px;
+    }
+    .data_type_nav {
+        display: flex;
+        flex-flow: row nowrap;
+        border-bottom: 1px solid #f1f1f1;
+        padding: 10px 0;
+        width: 100%;
+    }
+    .data_table_tabs{
+        padding-top: 10px;
+    }
+    .data_table_tabs form{
+        padding: 0 0 10px 0;
+        margin: 0;
+    }
+    .data_table_tabs .tip{
+        font-size: 12px;
+        line-height: 20px;
+        padding-bottom: 10px;
+    }
+    .topic_nav{
+        width: 700px;
+    }
+    .topic_nav .nav>li>a {
+        padding: 2px 20px;
+    }
+    .topic_nav .nav-pills>li.active>a, .topic_nav .nav-pills>li.active>a:focus, .topic_nav .nav-pills>li.active>a:hover{
+        background-color: #006798;
+    }
+
+</style>
+</head>
+<body>
+<div id="browser_suggest" class="browser_suggest" style="display: none;">您的浏览器不被支持，请尽快升级到最新版下列浏览器。
+    <a href="https://www.microsoft.com/zh-cn/edge" rel="noopener noreferrer" target="_blank"><img src="static/img/edge.png" /> Edge</a>
+    <a href="https://www.google.cn/chrome/" rel="noopener noreferrer" target="_blank"><img src="static/img/chrome.png" /> Chrome</a>
+    <a href="https://www.firefox.com.cn/" rel="noopener noreferrer" target="_blank"><img src="static/img/firefox.png" /> Firefox</a>
+</div>
+<div class="header_navbar_bg ">
+    <div class="header_navbar_content">
+        <div class="flex">
+            <div class="logo_box">
+                <div class="logo">
+                    <a href="" target="_blank"></a>
+                </div>
+            </div>
+            <div class="menu">
+                <ul>
+                    <li id="top_nav_menu_home" ><a href="/">首页</a></li>
+                    <li id="top_nav_menu_calendar" ><a href="/data/calendar/">投资日历</a></li>
+                    <li id="top_nav_menu_data" class="active"><a id="nav_data" href="/web/data/cb/">实时数据</a></li>
+                    <li id="top_nav_menu_forum"><a href="/explore/">社区-知识库</a></li>
+                </ul>
+            </div>
+            <div class="search_box">
+                            </div>
+            <div class="user_box">
+                                                        <div class="not_logged_in">
+                        <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                            <a class="btn btn-default" href="/account/login/" role="button">登录</a>
+                            <a class="btn btn-default" href="/account/register/" role="button">注册</a>
+                        </div>
+                    </div>
+                                                </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="application/javascript">
+
+    var document_title = '';
+    var unreadCacheSecond = 125;
+    function check_notifications(force) {
+
+        if (G_USER_ID == 0) return false;
+		var timestamp = Date.parse(new Date()) / 1000;
+		var cache = localStorage.getItem('user-unread:' + G_USER_ID);
+      	cache = cache ? JSON.parse(cache) : null;
+
+        function formatUnreadText(data){
+            var unread = Number(data.inbox_num);
+            if(unread>0) $('#inbox_unread').text(unread>99?'...':unread).show();
+            else $('#inbox_unread').hide();
+
+            var last_unread_notification = G_UNREAD_NOTIFICATION;
+            G_UNREAD_NOTIFICATION = Number(data.notifications_num);
+            if (G_UNREAD_NOTIFICATION > 0)
+            {
+                if (G_UNREAD_NOTIFICATION != last_unread_notification) $('#notifications_unread').html(G_UNREAD_NOTIFICATION>99?'...':G_UNREAD_NOTIFICATION);$('#notifications_unread').attr('data-unread',G_UNREAD_NOTIFICATION);
+                $('#notifications_unread').show();
+            }else{
+                if ($('.notification_popover .popover-content').length > 0) $('.notification_popover .popover-content').html('没有未读通知');
+                $('#notifications_unread').hide();
+            }
+
+            if (((Number(data.notifications_num) + Number(data.inbox_num))) > 0)
+            {
+                document.title = '(' + (Number(data.notifications_num) + Number(data.inbox_num)) + ') ' + document_title;
+            }
+        }
+        if (!force && cache && cache.timestamp > timestamp - unreadCacheSecond) {
+			formatUnreadText(cache.data);
+		} else {
+			$.get('/webapi/account/unread/', function (result) {
+				formatUnreadText(result.data);
+				localStorage.setItem('user-unread:' + G_USER_ID,JSON.stringify({ timestamp: Date.parse(new Date()) / 1000, data: result.data }));
+			},'json');
+		}
+    }
+
+    function read_notification(id){
+        if (id) {
+            $('#notification_'+id).remove();
+        }
+        if ($("#notifications_unread").length > 0)
+        {
+            G_UNREAD_NOTIFICATION = Number($('#notifications_unread').attr('data-unread'))-1;
+            $("#notifications_unread").html(G_UNREAD_NOTIFICATION>99?'...':G_UNREAD_NOTIFICATION);
+        }
+        $.get(G_BASE_URL + '/notifications/ajax/read_notification/notification_id-' + id + '__read_type-1', function (respose)
+        {
+            check_notifications(true);
+        });
+    }
+
+    function formatDateTime(ns) {
+        return new Date(parseInt(ns) * 1000).format('yyyy-MM-dd h:m');
+    }
+
+    function searchInputInit(){
+        $('#search_input').data('active',{row:0,topicCol:0});
+    }
+    function searchInputUnactive() {
+        var active = $('#search_input').data('active');
+        var rowsList = $('.search_item');
+        if(rowsList.length && active) {
+            rowsList.eq(active.row).removeClass('active');
+
+            var topSearchItem = $('.topic>.search_item');
+            var colsList = $('.topic>.search_item>a');
+            if (topSearchItem.length) colsList.eq(active.topicCol).removeClass('active');
+        }
+    }
+    function searchInputActive(){
+        var active = $('#search_input').data('active');
+        if(active.row < 0) return;
+        var rowsList = $('.search_item');
+        if(rowsList.length) {
+            rowsList.eq(active.row).addClass('active');
+
+            var topSearchItem = $('.topic>.search_item.active');
+            var colsList = $('.topic>.search_item>a');
+            if (topSearchItem.length) colsList.eq(active.topicCol).addClass('active');
+        }
+    }
+    function searchInputEnter(){
+        var active = $('#search_input').data('active');
+        console.log(active);
+        if(active.row < 0){
+            $('#global_search_form').submit();//未选中条目跳转搜索页
+        }else {
+            var rowsList = $('.search_item');
+            if(rowsList.length) {
+                var topSearchItem = $('.topic>.search_item.active');
+                var colsList = $('.topic>.search_item>a');
+                if (topSearchItem.length) {
+                    colsList.eq(active.topicCol)[0].click();
+                }else{
+                    $('a',rowsList.eq(active.row))[0].click();
+                }
+            }
+        }
+    }
+    function searchInputTopicIndex(){
+        var index = -1;
+        var rowsList = $('.search_item');
+        for(var i=0; i< $('.search_item').length;i++){
+            if(rowsList.eq(i).parent().hasClass('topic')){
+                index = i;break;
+            }
+        }
+        return index;
+    }
+
+    function generateDataHtml(data){
+        var html = new Array();
+        var keyword = $('#search_input').val();
+        if(data && data.type==9 && data.data.length>0){
+            html.push('<div class="search_type data">');
+            html.push('<div class="title">数据</div><div class="more"><a href="javascript:void(0)" onclick="$(\'#search_type\').val(\'data\');$(\'#global_search_form\').submit()">更多数据&gt;&gt;</a></div>');
+            for(var i=0;i<data.data.length;i++) {
+                html.push('<div class="search_item"><a href="'+data.data[i].uri+'"><div class="search_text">'+data.data[i].sname+' ('+ data.data[i].market.toUpperCase() + data.data[i].sid +')</div><div class="search_info">'+data.data[i].tname+'</div></a></div>');
+            }
+            html.push('</div>');
+        }
+        return html.join('');
+    }
+    function generateTopicHtml(data){
+        var html = new Array();
+        var keyword = $('#search_input').val();
+        if(data && data.type==2 && data.data.length>0){
+            html.push('<div class="search_type topic">');
+            html.push('<div class="title">标签</div><div class="more"><a href="javascript:void(0)" onclick="$(\'#search_type\').val(\'topics\');$(\'#global_search_form\').submit()">更多标签&gt;&gt;</a></div><div class="search_item">');
+            for(var i=0;i<data.data.length;i++) {
+                html.push('<a href="'+data.data[i].url+'">'+data.data[i].name+'</a>');
+            }
+            html.push('</div></div>');
+        }
+        return html.join('');
+    }
+    function generateUserHtml(data){
+        var html = new Array();
+        var keyword = $('#search_input').val();
+        if(data && data.type==3 && data.data.length>0){
+            html.push('<div class="search_type user">');
+            html.push('<div class="title">用户</div><div class="more"><a href="javascript:void(0)" onclick="$(\'#search_type\').val(\'users\');$(\'#global_search_form\').submit()">更多用户&gt;&gt;</a></div>');
+            for(var i=0;i<data.data.length;i++) {
+                html.push('<div class="search_item"><a href="'+data.data[i].url+'"><div class="search_info"><img src="'+data.data[i].detail.avatar_file+'" /></div><div class="search_text">'+data.data[i].name+'</div></a></div>');
+            }
+            html.push('</div>');
+        }
+        return html.join('');
+    }
+    function generateQuestionHtml(data){
+        var html = new Array();
+        var keyword = $('#search_input').val();
+        if(data && data.type==1 && data.data.length>0){
+            html.push('<div class="search_type question">');
+            html.push('<div class="title">问题</div><div class="more"><a href="javascript:void(0)" onclick="$(\'#search_type\').val(\'questions\');$(\'#global_search_form\').submit()">更多问题&gt;&gt;</a></div>');
+            for(var i=0;i<data.data.length;i++) {
+                html.push('<div class="search_item"><a href="'+data.data[i].url+'"><div class="search_text">'+data.data[i].name+'</div><div class="search_info">'+data.data[i].detail.meta_percent+'%匹配</div></a></div>');
+            }
+            html.push('</div>');
+        }
+        return html.join('');
+    }
+    function generateAnswerHtml(data){
+        var html = new Array();
+        var keyword = $('#search_input').val();
+        if(data && data.type==4 && data.data.length>0){
+            html.push('<div class="search_type answer">');
+            html.push('<div class="title">回复</div><div class="more"><a href="javascript:void(0)" onclick="$(\'#search_type\').val(\'answers\');$(\'#global_search_form\').submit()">更多回复&gt;&gt;</a></div>');
+            for(var i=0;i<data.data.length;i++) {
+                html.push('<div class="search_item"><a href="'+data.data[i].url+'"><div class="search_text">'+data.data[i].name+'</div><div class="search_info">'+data.data[i].detail.meta_percent+'%匹配</div></a></div>');
+            }
+            html.push('</div>');
+        }
+        return html.join('');
+    }
+
+    $(document).ready(function() {
+
+        document_title = document.title;
+        var ua = window.navigator.userAgent.toLowerCase();
+        var webkit = ua.match( /webkit\/([\d.]+)/ ),
+        firefox = ua.match( /firefox\/([\d.]+)/ ),
+        edge = ua.match( /edg\/([\d.]+)/ ),
+        chrome = ua.match( /chrome\/([\d.]+)/ ),
+        safari = ua.match( /safari\/([\d.]+)/ ),
+        ie = ua.match( /msie\s([\d\.]+)/ ) || ua.match( /(?:trident)(?:.*rv:([\w.]+))?/i );
+
+        if (localStorage.getItem('data-cb-version') === 'old') {
+            $('#nav_data').attr('href', '/data/cbnew/');
+        }
+
+        var currAgent = {};
+        var browser_suggest = true;
+        if (firefox) {
+            currAgent['name'] = 'firefox';
+            currAgent['version'] = parseInt(firefox[1]);
+            if(currAgent['version'] >= 53) browser_suggest = false;
+        } else if (edge) {
+            currAgent['name'] = 'edge';
+            currAgent['version'] = parseInt(edge[1]);
+            if(currAgent['version'] >= 79) browser_suggest = false;
+        } else if (chrome) {
+            currAgent['name'] = 'chrome';
+            currAgent['version'] = parseInt(chrome[1]);
+            if(currAgent['version'] >= 66) browser_suggest = false;
+        } else if (safari) {
+            var version = ua.match( /version\/([\d.]+)/ );
+            currAgent['name'] = 'safari';
+            currAgent['version'] = parseInt(version[1]);
+            if(currAgent['version'] >= 11) browser_suggest = false;
+        } else if (webkit) {
+            currAgent['name'] = 'webkit';
+            currAgent['version'] = parseInt(webkit[1]);
+            if(currAgent['version'] >= 537) browser_suggest = false;
+        }
+        if (browser_suggest) $('#browser_suggest').show();
+
+        if (!navigator.cookieEnabled) {
+            $('body').prepend('<div class="browser_suggest">请允许站点保存和读取 Cookie 数据，否则站点无法正常使用。</div>');
+        }
+
+        if (typeof (G_NOTIFICATION_INTERVAL) != 'undefined')
+        {
+            check_notifications(window.location.href.indexOf('notification_id-')?true:false);
+            setInterval('check_notifications()', G_NOTIFICATION_INTERVAL);
+        }
+
+        var debug_user = false;
+        $('#user_menu').popover({
+            placement:"bottom auto",
+            trigger:"manual",
+            content:" ",
+            html:true,
+            template:'<div class="user_menu_popover popover" role="tooltip"><div class="arrow"></div><div class="popover-content"></div></div>'
+        }).on("mouseenter", function (){
+            var _this = this;
+            if(!$(this).parent().find('div.popover').length || $(this).parent().find('div.popover').is(':hidden')) $(this).popover("show");
+            $(".popover", $(this).parent()).on("mouseleave", function () {
+                setTimeout(function () {if(!$(":hover",_this).length && !debug_user) $(_this).popover("hide");},300);
+            });
+
+        }).on("mouseleave", function () {
+            var _this = this;
+            setTimeout(function () {if (!$(_this).parent().find(".popover:hover").length && !debug_user) $(_this).popover("hide");}, 300);
+        }).on('shown.bs.popover', function () {
+            var _this = this;
+            var box = $(this).parent().find('div.popover');
+            var menu = $(this).parent().find('.popover-menu').clone();
+
+            $('.popover-content',box).html(menu);
+            menu.show();
+        });
+
+
+        $('#notification_btn').popover({
+            placement:"bottom auto",
+            trigger:"manual",
+            content:"没有未读通知",
+            html:true,
+            template:'<div class="notification_popover popover" role="tooltip"><div class="arrow"></div><div class="popover-content"></div></div>'
+        })
+        .on("mouseenter", function () {
+            var _this = this;
+            $(this).data('status','enter');
+            if(!$(this).parent().find('div.popover').length || $(this).parent().find('div.popover').is(':hidden')) $(this).popover("show");
+            $(".popover", $(this).parent()).on("mouseleave", function () {
+                setTimeout(function () {
+                    if($(_this).data('status')!='enter') $(_this).popover("hide");
+                }, 300);
+            });
+        })
+        .on("mouseleave", function () {
+            var _this = this;
+            $(this).data('status','leave');
+            setTimeout(function () {
+                if (!$(_this).parent().find(".popover:hover").length && $(_this).data('status')!='enter') $(_this).popover("hide");
+            }, 300);
+        })
+        .on("mousemove", function () {
+            if(!$(this).parent().find('div.popover').length || $(this).parent().find('div.popover').is(':hidden')) $(this).popover("show");
+        })
+        .on('shown.bs.popover', function () {
+            var _this = this;
+            var box = $(this).parent().find('div.popover');
+            var notifications_unread = Number($('#notifications_unread').text());
+            if(notifications_unread<=0) return;
+            $.ajax({
+                type: "GET",
+                url: G_BASE_URL + '/notifications/ajax/last/flag-0__limit-5',
+                success: function (data, textStatus) {
+                    var html = new Array();
+                    for(var i=0; i<data.rsm.list.length;i++) {
+                        //data.rsm.list[i].extend_message = 'extend_message';
+                        var item = new Array();
+                        item.push('<div id="notification_'+data.rsm.list[i].notification_id+'">');
+                        item.push('<div class="message">'+data.rsm.list[i].message+'<a class="close" href="javascript:read_notification('+data.rsm.list[i].notification_id+')">×</a></div>');
+                        item.push('<div class="addtime">'+formatDateTime(data.rsm.list[i].add_time)+(data.rsm.list[i].extend_message?'<a class="extend" href="javascript:void(0)" onclick="$(\'#notification_'+data.rsm.list[i].notification_id+'\').find(\'.extend_message\').fadeIn();$(this).hide();">+</a>':'')+'</div>');
+                        if(data.rsm.list[i].extend_message)item.push('<div class="extend_message" style="display: none">'+data.rsm.list[i].extend_message+'</div>');
+                        item.push('</div>');
+                        html.push(item.join(''));
+
+                    }
+                    $('.popover-content',box).html(html.join(''));
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(textStatus + "\n" + jqXHR.responseText);
+                }
+            });
+
+        });
+
+        $('#search_input').popover({
+            placement:"bottom",
+            content:"<div class=\"no_content\">没有搜索到内容</div>",
+            trigger:"manual",
+            html:true,
+            template:'<div class="popover" role="tooltip"><div class="arrow"></div><div class="popover-content"></div></div>'
+        }).on('shown.bs.popover', function () {
+
+            var box = $(this).parent().find('div.popover');
+            var inputValue = $(this).val();
+            //console.log(inputValue);
+            if(inputValue.length < 2) {
+                $('.popover-content',box).html('<div class="no_content">没有搜索到内容</div>');
+                return;
+            }
+
+            $.get(G_BASE_URL + '/search/ajax/searchtype/?q='+inputValue, function (data) {
+                if(data && data.length>0){
+                    var htmlArray = new Array(),htmlType9 = '',htmlType2 = '',htmlType3 = '',htmlType1 = '',htmlType4 = '';
+                    for(var i=0; i<data.length; i++){
+                        //1:questions 2:topics 3:users 4:answers 9:data
+                        if(data[i].type == 9) htmlType9 = generateDataHtml(data[i]);
+                        if(data[i].type == 2) htmlType2 = generateTopicHtml(data[i]);
+                        if(data[i].type == 3) htmlType3 = generateUserHtml(data[i]);
+                        if(data[i].type == 1) htmlType1 = generateQuestionHtml(data[i]);
+                        if(data[i].type == 4) htmlType4 = generateAnswerHtml(data[i]);
+                    }
+                    htmlArray.push(htmlType9);
+                    htmlArray.push(htmlType2);
+                    htmlArray.push(htmlType3);
+                    htmlArray.push(htmlType1);
+                    htmlArray.push(htmlType4);
+
+                    var htmlDom = $(htmlArray.join(''));
+
+                    var itemList = $('.search_item .search_text',htmlDom);
+
+                    for(var i = 0; i < itemList.length; i++){
+                        itemList.eq(i).html(itemList.eq(i).html().replace(inputValue,'<span class="match">'+inputValue+'</span>'));
+                    }
+                    var topicList = $('.topic>.search_item>a',htmlDom);
+                    for(var i = 0; i < topicList.length; i++){
+                        topicList.eq(i).html(topicList.eq(i).html().replace(inputValue,'<span class="match">'+inputValue+'</span>'));
+                    }
+                    $('.popover-content',box).html(htmlDom);
+                    searchInputInit();
+                    searchInputActive();
+                }else{
+                    $('.popover-content',box).html('<div class="no_content">没有搜索到内容</div>');
+                }
+            });
+        });
+        //$('#search_input').popover('show');
+
+        $('#search_input').on('input propertychange',function(event){
+            var _this = this;
+            var inputValue = $(this).val();
+            if (window.event && event.type == 'propertychange' && event.propertyName != 'value') return;
+
+            window.clearTimeout($(this).data('timeout'));
+            $(this).data('timeout', setTimeout(function () {
+                if(inputValue.length > 0){
+                    $(_this).popover('show');
+                    //console.log('值改变了~输入值：' + inputValue);
+                }else{
+                    $(_this).popover('hide');
+                }
+            }, 500));
+        }).on('keydown',function(event){
+            if($.inArray(event.keyCode,[27,13,38,40,37,39]) === -1) return;
+            var rowsList = $('.search_item');
+            if(rowsList.length <=0) return;
+            var colsList = $('.topic>.search_item>a');
+            var topicIndex = searchInputTopicIndex();
+            var active =$(this).data('active');
+            searchInputUnactive();
+            switch (event.keyCode) {
+                case 27://esc
+                    $(this).val('');
+                    searchInputInit();
+                    $(this).popover('hide');
+                    break;
+                case 13://enter
+                    searchInputEnter();
+                    break;
+                case 38://top
+                    active.row -= 1;
+                    if(active.row < 0) active.row = rowsList.length - 1;
+                    break;
+                case 40://down
+                    active.row += 1;
+                    if(active.row >= rowsList.length) active.row = 0;
+                    break;
+                case 37://left
+                    if(topicIndex==active.row && colsList.length > 0){
+                        active.topicCol -= 1;
+                        if(active.topicCol < 0) active.topicCol = colsList.length - 1;
+                        event.stopPropagation();
+                        event.preventDefault();
+                    }
+                    break;
+                case 39://right
+                    if(topicIndex==active.row && colsList.length > 0){
+                        active.topicCol += 1;
+                        if(active.topicCol >= colsList.length) active.topicCol = 0;
+                        event.stopPropagation();
+                        event.preventDefault();
+                    }
+                    break;
+            }
+            searchInputActive();
+        }).on('blur',function (event) {
+            $(this).popover('hide');
+        });
+
+
+    });
+
+</script><div class="header_subnavbar_bg">
+    <div class="grid header_subnavbar_content">
+        <div class="grid-row">
+            <div class="grid-col-3">
+                <div class="subnavbar_left">
+                    <!--a href="/data/mine/" >自选</a-->
+                    <a href="/web/positions" class="beta">持仓</a>
+                </div>
+            </div>
+            <div class="grid-col-21">
+                <div class="subnavbar_right">
+                    <div>
+                        <a href="/data/new_stock/" >新股</a>
+                        <a href="/data/stock/dividend_rate/" >股息率</a>
+                        <a href="/data/taoligu/" >套利股</a>
+                        <a href="/data/bond/" >债券</a>
+                        <a id="menu_cb" href="/web/data/cb/" >可转债</a>
+                        <a href="/data/cf/" >封闭基金</a>
+                        <a href="/data/etf/" >ETF</a>
+                    </div>
+                    <div>
+                        <a href="/data/repo/" >现金管理</a>
+                        <a href="/data/ha/" >A/H比价</a>
+                        <a href="/data/qdii/" >T+0 QDII</a>
+                        <a href="/data/cnreits/" >REITs</a>
+                        <a href="/data/idx_performance/" >指数涨幅</a>
+                        <a href="/data/option/" >期权</a>
+                        <a href="/data/lof/" class="on">LOF</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript">
+
+$(document).ready(function() {
+    if (localStorage.getItem('data-cb-version') === 'old') {
+        $('#menu_cb').attr('href', '/data/cbnew/');
+    }
+});
+
+</script>
+<div class="grid data_content">
+
+    <div class="grid-row data_type_nav">
+        <div class="topic_nav">
+            <ul class="nav nav-pills" id="topic">
+                <li role="presentation"><a href="javascript:;" alias="tlink_1" id="tlink_stock" tname="stock" fname=showStockLOF>股票LOF</a></li>
+                <li role="presentation"><a href="javascript:;" alias="tlink_0" id="tlink_index" tname="index" fname=showIndexLOF>指数LOF</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="grid-row data_table_tabs">
+        <div id="topic_index" style="display:none;">
+            <table id="flex_index" style="display:none;min-width:1200px;" class="tablesorter"></table>
+        </div>
+        <div id="topic_stock" style="display:none;">
+            <table id="flex_stock" style="display:none;min-width:1200px;" class="tablesorter"></table>
+        </div>
+        <div style="font-size: 12px;margin-top: 10px;">
+        数据说明：<br>
+        1、上交所公布基金份额数据为交易日当天的盘后场内份额。<br>
+        2、深交所公布基金份额数据为交易日当天盘前场内份额。<br>
+        3、集思录份额数据为交易日当天盘前场内份额，与上交所数据日期差一个工作日，与深交所数据日期一致。<br>
+        4、跟踪港股指数的LOF估值数据使用了<a target="_blank" href="/data/rmb/HKD">港币中间价</a>进行修正。
+        </div>
+    </div>
+</div>
+
+<div style="display:none;">
+    <div id="stockTitle">
+        股票LOF基金(<a href="javascript:reloadStockLOF();">手动刷新</a>)&nbsp;&nbsp;&nbsp;&nbsp;
+        <span data-toggle="tooltip"><input id="auto_reload_stock"  type="checkbox" />30秒自动刷新</span>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/data/fund/amount/" target="_blank">场内基金份额查询器 <img src="/static/img/new.png"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <label style="display:inline;margin-left:10px;" for="stock_search_form_owned"><input id="stock_search_form_owned" onclick="reloadStockLOF()" type="checkbox" name="only_owned" value="y">仅看自选</label>
+    </div>
+    <div id="indexTitle">
+        指数LOF基金(<a href="javascript:reloadIndexLOF();">手动刷新</a>)&nbsp;&nbsp;&nbsp;&nbsp;
+        <span data-toggle="tooltip"><input id="auto_reload_index"  type="checkbox" />30秒自动刷新</span>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/data/fund/amount/" target="_blank">场内基金份额查询器 <img src="/static/img/new.png"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/question/68799" title="华宝香港中小盘(501021) FAQ" target="_blank">香港中小 FAQ</a>
+        <label style="display:inline;margin-left:10px;" for="index_search_form_owned"><input id="index_search_form_owned" onclick="reloadIndexLOF()" type="checkbox" name="only_owned" value="y">仅看自选</label>
+    </div>
+</div>
+<script type="text/javascript">
+var is_member = 0;
+$(function(){
+    initTab('stock', 'LOF基金');
+});
+
+function ownedStyler(nameVal, row){
+  if(row.holded){
+        return ';color:#ff8c00';
+  }else if(row.owned){
+    return ';color:red;';
+  }
+  return '';
+}
+
+function bindAutoCheckbox() {
+    if (!is_member){
+        var list = $('[data-toggle="tooltip"]');
+        list.attr('title','自动刷新购买会员可用');
+        $('input',list).prop("checked",false);
+    }
+}
+
+function reloadIndexLOF(){
+    var is_owned = '';
+    if($('#index_search_form_owned').prop('checked')){
+        is_owned = 'y';
+    }
+    tableIndexLOF.reload({'only_owned': is_owned});
+}
+var bindIndexLOFStatus = new AutoReloadStatus();
+function bindIndexLOFAutoReload(){
+    setAutoReloadTable(tableIndexLOF,'auto_reload_index','auto_reload_index', reloadIndexLOF, bindIndexLOFStatus);
+    bindAutoCheckbox();
+}
+var tableIndexLOF = null;
+var lastShow = 'index';
+function showIndexLOF(){
+    lastShow = 'index';
+    var config ={
+        dataURL: '/data/lof/index_lof_list/',
+        tid: 'flex_index',
+        afterShow: bindIndexLOFAutoReload,
+        url_method: 'GET',
+        cols: [
+            {display: '代码', name:'fund_id', width:30, nowrap:true, styler:ownedStyler,
+                link: {
+                url:'/data/lof/detail/{{fund_id}}',
+                newpage: true,
+                type: self
+                }
+            },
+            {display: '名称', name:'fund_nm', width:30, nowrap:true, styler:ownedStyler},
+            {display: '现价', name:'price', width:40,tooltip: '更新时间：{{last_time}}'},
+            {display: '涨幅', name:'increase_rt', width:40, color:true, percentage:true},
+            {display: '成交<br>(万元)', name:'volume', width:40},
+            {display: '场内份额<br>(万份)', name:'amount', width:30, nowrap:true,tooltip: '{{amount_incr_tips}}'},
+            {display: '场内新增<br>(万份)', name:'amount_incr', width:30, nowrap:true,tooltip: '{{amount_incr_tips}}'},
+            {display: '换手率', name:'turnover_rt', width:40, nowrap:true, percentage:true},
+            {display: '基金净值', name:'fund_nav', width:40,tooltip: '净值日期：{{nav_dt}}',
+                link: {
+                url:'http://fund.eastmoney.com/{{fund_id}}.html',
+                newpage: true,
+                type: self
+                }
+            },
+            {display: '净值日期', name:'nav_dt', width:60, nowrap: true},
+            {display: '实时估值', name:'estimate_value', width:40, tooltip: '平均估算误差'},
+            {display: '溢价率', name:'discount_rt', width:40,bgcolor:'yellow',tooltip: '估算时间：{{last_time}}', nowrap:true, color:true, percentage:true},
+            {display: '跟踪指数', name:'index_nm', width:40,tooltip: '指数代码：{{index_id}}',nowrap:true, formatter:indexNameFormatter},
+            {display: '指数涨幅', name:'index_increase_rt', width:40, color:true, percentage:true},
+            {display: '申购费', name:'apply_fee', width:20,tooltip: '{{apply_fee_tips}}'},
+            {display: '赎回费', name:'redeem_fee', width:20,tooltip: '{{redeem_fee_tips}}'},
+            {display: '申赎状态', name:'apply_redeem_status', width:60, nowrap:true, tooltip: '{{min_amt}}'},
+            {display: '基金公司', name: 'issuer_nm', width:60, formatter:issuerNameFormatter},
+            {display: '备注', name:'notes', width:40},
+            {display: '操作', name: 'lofOpt',title: '操作', formatter: lofOptFormatter, width:15},
+            {display: '最小单位', name:'min_amt', width:40, hidden: true},
+            {display: '场内新增提示', name:'amount_incr_tips', width:40, hidden: true},
+            {display: '申购费提示', name:'apply_fee_tips', width:40, hidden: true},
+            {display: '赎回费提示', name:'redeem_fee_tips', width:40, hidden: true},
+            {display: '最后更新', name: 'last_time', width:30,hidden: true},
+            {display: '估算时间', name: 'last_est_time', width:30,hidden: true},
+            { name: 'index_id', width:30,hidden: true}
+        ],
+        rp: 25,
+        title: '#indexTitle'
+    };
+    if(!tableIndexLOF){
+        tableIndexLOF = new SimpleTableBuilder(config);
+        tableIndexLOF.show();
+  }else{
+        tableIndexLOF = new SimpleTableBuilder(config);
+        var cnd = $('#lofSearchForm').serializeObjectToJson();
+        tableIndexLOF.reload(cnd);
+  }
+}
+
+function issuerNameFormatter(nameVal, row){
+    if(row['issuer_nm']){
+        if(row['urls']){
+            return '<a target="_blank" rel="noopener noreferrer" href="' + row['urls'] + '">' + row['issuer_nm'] + '</a>';
+        }
+        return row['issuer_nm'];
+    }
+    return '';
+}
+
+function indexNameFormatter(nameVal, row){
+  var startChar = row.index_id.charAt(0);
+  if('0' == startChar || '3' == startChar){
+    return '<a href="http://quote.eastmoney.com/zs' + row.index_id + '.html">' + row.index_nm + '</a>';
+  }else{
+    return row.index_nm;
+  }
+}
+
+function lofOptFormatter(nameVal, row){
+    if(row.owned){
+        return '<a title="将【' + row.fund_nm + '】从自选中删除" href="javascript:delOwnedLof(\'' + row.fund_id + '\');"><span class="jisilu-icons risered">&#xe61d;</span></a>';
+    }else{
+        return '<a title="将【' + row.fund_nm + '】添加入自选" href="javascript:addOwnedLof(\'' + row.fund_id + '\');"><span class="jisilu-icons">&#xe61e;</span></a>';
+    }
+}
+
+function addOwnedLof(fund_id){
+    $.post(G_BASE_URL + '/data/lof/add_owned_lof/',{fund_id : fund_id},function(rst){
+        if(!rst.isError){
+            if(lastShow == 'stock') {
+                showStockLOF();
+            }else {
+                showIndexLOF();
+            }
+        }else{
+            $.alert(rst.msg);
+        }
+    },'json');
+}
+function delOwnedLof(fund_id){
+    $.post(G_BASE_URL + '/data/lof/del_owned_lof/',{fund_id : fund_id},function(rst){
+        if(!rst.isError){
+            if(lastShow == 'stock') {
+                showStockLOF();
+            }else {
+                showIndexLOF();
+            }
+        }else{
+            $.alert(rst.msg);
+        }
+    },'json');
+}
+
+function reloadStockLOF(){
+    var is_owned = '';
+    if($('#stock_search_form_owned').prop('checked')){
+        is_owned = 'y';
+    }
+    tableStockLOF.reload({'only_owned': is_owned});
+}
+
+var bindStockLOFStatus = new AutoReloadStatus();
+function bindStockLOFAutoReload(){
+    setAutoReloadTable(tableStockLOF,'auto_reload_stock','auto_reload_stock', reloadStockLOF, bindStockLOFStatus);
+    bindAutoCheckbox();
+}
+var tableStockLOF = null;
+function showStockLOF(){
+    lastShow = 'stock';
+    var config ={
+        dataURL: '/data/lof/stock_lof_list/',
+        tid: 'flex_stock',
+        afterShow: bindStockLOFAutoReload,
+        url_method: 'GET',
+        cols: [
+            {display: '代码', name:'fund_id', width:30, nowrap:true, styler:ownedStyler,
+                link: {
+                url:'/data/lof/detail/{{fund_id}}',
+                newpage: true,
+                type: self
+                }
+            },
+            {display: '名称', name:'fund_nm', width:30, nowrap:true, styler:ownedStyler},
+            {display: '现价', name:'price', width:40,tooltip: '更新时间：{{last_time}}'},
+            {display: '涨幅', name:'increase_rt', width:40, color:true, percentage:true},
+            {display: '成交<br>(万元)', name:'volume', width:40},
+            {display: '场内份额<br>(万份)', name:'amount', width:30, nowrap:true,tooltip: '{{amount_incr_tips}}'},
+            {display: '场内新增<br>(万份)', name:'amount_incr', width:30, nowrap:true,tooltip: '{{amount_incr_tips}}'},
+            {display: '换手率', name:'turnover_rt', width:40, nowrap:true, percentage:true},
+            {display: '基金净值', name:'fund_nav', width:40,tooltip: '净值日期：{{nav_dt}}',
+                link: {
+                url:'http://fund.eastmoney.com/{{fund_id}}.html',
+                newpage: true,
+                type: self
+                }
+            },
+            {display: '净值日期', name:'nav_dt', width:60, nowrap: true},
+            {display: '实时估值', name:'estimate_value', width:40, tooltip: '平均估算误差'},
+            {display: '溢价率', name:'discount_rt', width:40,bgcolor:'yellow',tooltip: '估算时间：{{last_est_time}}', nowrap:true, color:true, percentage:true},
+            {display: '股票占比', name:'stock_ratio', width:40,tooltip: '{{ratio_tips}}', percentage:true},
+            {display: '重仓涨幅', name:'stock_increase_rt', width:20, color:true, percentage:true},
+            {display: '申购费', name:'apply_fee', width:20,tooltip: '{{apply_fee_tips}}'},
+            {display: '赎回费', name:'redeem_fee', width:20,tooltip: '{{redeem_fee_tips}}'},
+            {display: '申赎状态', name:'apply_redeem_status', width:60, nowrap:true, tooltip: '{{min_amt}}'},
+            {display: '基金公司', name: 'issuer_nm', width:60, formatter:issuerNameFormatter},
+            {display: '备注', name:'notes', width:40},
+            {display: '操作', name: 'lofOpt',title: '操作', formatter: lofOptFormatter, width:15},
+            {display: '持仓占比', name:'ratio_tips', width:40, hidden: true},
+            {display: '最小单位', name:'min_amt', width:40, hidden: true},
+            {display: '场内新增提示', name:'amount_incr_tips', width:40, hidden: true},
+            {display: '股票市值', name:'stock_amount', width:40, hidden: true},
+            {display: '申购费提示', name:'apply_fee_tips', width:40, hidden: true},
+            {display: '赎回费提示', name:'redeem_fee_tips', width:40, hidden: true},
+            {display: '最后更新', name: 'last_time', width:30,hidden: true},
+            {display: '估算时间', name: 'last_est_time', width:30,hidden: true}
+        ],
+        rp: 25,
+        title: '#stockTitle'
+    };
+    if(!tableStockLOF){
+        tableStockLOF = new SimpleTableBuilder(config);
+        tableStockLOF.show();
+  }else{
+        tableStockLOF = new SimpleTableBuilder(config);
+        var cnd = $('#slofSearchForm').serializeObjectToJson();
+        tableStockLOF.reload(cnd);
+  }
+}
+
+</script>
+
+<div class="footer_bg ">
+    <div class="footer_content">
+        <div class="flex">
+            <div class="footer_left">
+                <!-- 京ICP证160493号  京ICP备12044618号-1 -->
+                <div>
+                    <a style="text-decoration:none;color:#4d4d4c;" target="_blank" rel="noopener noreferrer" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802031449">
+                        <img src="/static/img/beian.gov.cn.png"/> 京公网安备 11010802031449号
+                    </a>
+                </div>
+                <div>京ICP证160493号 <a style="text-decoration:none;color:#4d4d4c;" href="https://beian.miit.gov.cn" target="_blank" rel="noopener noreferrer">京ICP备12044618号</a></div>
+                <div>
+                    <a style="text-decoration:none;color:#4d4d4c;" href="/account/agreement/" target="_blank">用户协议</a><span class="separator">|</span>
+                    <a href="/account/private_agreement/" target="_blank">隐私政策</a><span class="separator">|</span>
+                    <a href="/question/48275" target="_blank">问题反馈</a>
+                </div>
+                <div>
+                    <!-- 联系电话：010-58481319 --> 客服邮箱：service@jisilu.com
+                </div>
+                <div>
+                    &copy;2012-2022 集思录版权所有
+                </div>
+                <div>
+                    使用
+                    <a href="https://www.microsoft.com/zh-cn/edge" rel="noopener noreferrer" target="_blank"><span class="jisilu-icons">&#xe9c0;</span>Edge</a>
+                    或
+                    <a href="https://www.google.cn/chrome/" rel="noopener noreferrer" target="_blank"><span class="jisilu-icons">&#xe9be;</span>Chrome</a>
+                    <!-- <a href="https://www.firefox.com.cn/" rel="noopener noreferrer" target="_blank"><span class="jisilu-icons">&#xe9bf;</span>Firefox</a> -->
+                    浏览本站最佳 (<a href="/tools/es6checker/" target="_blank">检查我的浏览器</a>)
+                </div>
+                <div class="statement">声明：本站所有收费以及免费的信息和数据仅供参考，不构成投资建议，集思录不承担由此导致的任何责任。</div>
+
+            </div>
+            <div class="footer_right">
+                <div>微信公众号<img src="/static/css/default/img/qrcode_public.png" /></div>
+                <div>APP下载<img src="/static/css/default/img/qrcode_app.png" /></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- DO NOT REMOVE -->
+<div id="aw-ajax-box" class="aw-ajax-box"></div>
+
+<div id="ajax_data" style="display:none"></div>
+<div style="display:none;" id="__crond">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#__crond').html(unescape('%3Cimg%20src%3D%22' + G_BASE_URL + '/crond/run/1641277768%22%20width%3D%221%22%20height%3D%221%22%20/%3E'));
+        });
+    </script>
+</div>
+<!-- / DO NOT REMOVE -->
+<!-- Escape time: 0.021792888641357 --><script type="text/javascript" id="bdshare_js" data="type=tools"></script>
+<script type="text/javascript" src="/static/js/dc.js"></script>
+</body></html>

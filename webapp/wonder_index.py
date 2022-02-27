@@ -14,7 +14,7 @@ in_path = r'E:/BC/data/SBsb/'
 today = datetime.date.today()
 sd = str(today.replace(year=today.year - cal_year))
 ed = str(today)
-url1 = "https://open.lixinger.com/api/a/index/fundamental"
+url1 = "https://open.lixinger.com/api/cn/index/fundamental"
 url2 = "https://open.lixinger.com/api/macro/national-debt"
 data1 = {
     "token": "17871030-d55c-4562-b166-2ac0b5682a0f",
@@ -62,14 +62,15 @@ headers = {
     "Content-Type": "application/json",
     "Accept-Encoding": "gzip,deflate, br, *"
 }
-if update == 1:
-    s50 = json.loads(requests.post(url=url1, data=json.dumps(data1), headers=headers).text)
-    s300 = json.loads(requests.post(url=url1, data=json.dumps(data2), headers=headers).text)
-    s500 = json.loads(requests.post(url=url1, data=json.dumps(data3), headers=headers).text)
-    sy = json.loads(requests.post(url=url2, data=json.dumps(data4), headers=headers).text)
+s50 = json.loads(requests.post(url=url1, data=json.dumps(data1), headers=headers).text)
+s300 = json.loads(requests.post(url=url1, data=json.dumps(data2), headers=headers).text)
+s500 = json.loads(requests.post(url=url1, data=json.dumps(data3), headers=headers).text)
+sy = json.loads(requests.post(url=url2, data=json.dumps(data4), headers=headers).text)
+
 
 # res = requests.post(url=url, data=json.dumps(data), headers=headers)
 # print(res.text)
+
 
 def add_one(x):
     return datetime.datetime.strptime(x, '%Y-%m-%d').date() + datetime.timedelta(days=1)
@@ -79,11 +80,14 @@ def pick_data(r50, r300, r500, ry):
     if r50['code'] == 1:
         p1, p2, p3, p4, p5, p6, p7 = [], [], [], [], [], [], []
         for i in range(len(r50['data'])):
-            p1.append(r50['data'][i]['date'].split('T')[0])
-            p3.append(r50['data'][i]['pe_ttm']['y10']['mcw']['cv'])
-            p4.append(r300['data'][i]['pe_ttm']['y10']['mcw']['cv'])
-            p5.append(r500['data'][i]['pb']['y10']['mcw']['cv'])
-            p6.append(r500['data'][i]['pb']['y10']['mcw']['cvpos'])
+            if len(r50['data'][i]) == 3:
+                p1.append(r50['data'][i]['date'].split('T')[0])
+                p3.append(r50['data'][i]['pe_ttm']['y10']['mcw']['cv'])
+                p4.append(r300['data'][i]['pe_ttm']['y10']['mcw']['cv'])
+                p5.append(r500['data'][i]['pb']['y10']['mcw']['cv'])
+                p6.append(r500['data'][i]['pb']['y10']['mcw']['cvpos'])
+            elif len(r50['data'][i]) == 2:
+                print('数据缺失：', i)
         for iy in range(len(ry['data'])):
             p7.append(ry['data'][iy]['date'].split('T')[0])
             p2.append(ry['data'][iy]['mir_y10'])
@@ -129,6 +133,7 @@ def cal_temp(da, axr=0):  # 将估值数据百分位化
 temp_50 = 100 - (cal_temp(list(SYB['syb_50'])[::-1]))  # 50股债收益比百分位
 temp_300 = 100 - (cal_temp(list(SYB['syb_300'])[::-1]))  # 300股债收益比百分位
 temp_500 = (cal_temp(list(SYB['pb_500'])[::-1]))  # 500PB百分位
-print('十年国债收益率  50股债收益比  50百分位   300股债收益比  300百分位   500PB    500百分位   '+str(today))
+print('50|300:15高点2,1.5,19年初3.8,3.17疫情4.7,3.65')
+print('十年国债收益率  50股债收益比  50百分位   300股债收益比  300百分位   500PB    500百分位   ' + str(today))
 print('%.3f          %.3f        %.2f     %.3f         %.2f      %.3f     %.2f' % (
     100 * SYB.iloc[0, 0], SYB.iloc[0, 5], temp_50, SYB.iloc[0, 6], temp_300, SYB.iloc[0, 3], temp_500))
