@@ -6,6 +6,7 @@ import pandas as pd
 import datetime
 import requests
 import json
+import re
 
 day_post = 120  # 股票部分日期请求值,此值应在减去非交易日后仍大于设定值
 day_set = 60  # 股票部分日期设定值，即选取的比较区间大小
@@ -25,7 +26,7 @@ headers = {
 st, st1, st2 = {}, {}, {}
 
 
-def stock_data_get(stock_codes):
+def stock_data_get(stock_codes,stock_name):
     js_stock = json.loads(requests.post(url=url_stock, data=json.dumps(
         {"token": token, "startDate": sd_stock, "endDate": ed, "stockCodes": [stock_codes],
          "metricsList": ["fc_rights"]}), headers=headers).text)  # 前复权
@@ -40,15 +41,15 @@ def stock_data_get(stock_codes):
         k = len(list(filter(lambda x: x <= price_stock[i], sim)))
         print(stock_codes, stock.index[i], price_stock[i], 10 * ' ' + str(k), min(sim), max(sim),
               '%.2f %.2f' % (100 * (price_stock[i] / max(sim) - 1), 100 * (price_stock[i] / min(sim) - 1)))
-    st[stock_codes] = len(list(filter(lambda x: x <= price_stock[-1], price_stock[len(price_stock) - 1 - day_set:-1])))
-    st1[stock_codes] = round(100*(price_stock[-1]/min(price_stock[len(price_stock)-day_set:])-1),2)
-    st2[stock_codes] = round(100*(price_stock[-1]/max(price_stock[len(price_stock)-day_set:])-1),2)
+    st[stock_name] = len(list(filter(lambda x: x <= price_stock[-1], price_stock[len(price_stock) - 1 - day_set:-1])))
+    st1[stock_name] = round(100 * (price_stock[-1] / min(price_stock[len(price_stock) - day_set:]) - 1), 2)
+    st2[stock_name] = round(100 * (price_stock[-1] / max(price_stock[len(price_stock) - day_set:]) - 1), 2)
     print(40 * '*')
 
 
-d = pd.read_excel(in_path + 's28.xlsx')
-for i0 in range(len(d)):
-    stock_data_get((6 - len(str(d.iloc[i0, 0]))) * '0' + str(d.iloc[i0, 0]))
+d = pd.read_csv(in_path + '2.csv')
+for i0 in range(len(d) - 1):  # 减去理杏仁说明行
+    stock_data_get(re.split(r'"', d.iloc[i0, 1])[1], d.iloc[i0, 2])
 
 print(sorted(st.items(), key=lambda item: item[1]))
 print(sorted(st1.items(), key=lambda item: item[1]))
