@@ -7,8 +7,8 @@ import datetime
 import requests
 import json
 
-day_post = 1200  # 股票部分日期请求值,此值应在减去非交易日后仍大于设定值
-day_set = 60  # 股票部分日期设定值，即选取的比较区间大小
+day_post = 1800  # 股票部分日期请求值,此值应在减去非交易日后仍大于设定值
+day_set = 90  # 股票部分日期设定值，即选取的比较区间大小
 threshold_value = 2
 cal_year = 10  # 指数部分选取的时间长度
 in_path = r'E:/BC/data/wonder/'
@@ -40,4 +40,4 @@ def stock_data_get(stock_codes):
             print(stock_codes, stock.index[i], price_stock[i], 10 * ' ' + str(k))
 
 
-stock_data_get('002271')
+stock_data_get('300347')

@@ -162,7 +162,6 @@ print('50|300:15高点2,1.5,19年初3.8,3.17,20疫情4.7,3.65')
 print('十年国债收益率  50股债收益比  50百分位   300股债收益比  300百分位   500PB    500百分位   ' + str(today))
 print('%.3f          %.3f        %.2f     %.3f         %.2f      %.3f     %.2f' % (
     100 * SYB.iloc[0, 0], SYB.iloc[0, 5], temp_50, SYB.iloc[0, 6], temp_300, SYB.iloc[0, 3], temp_500))
-# index_time | y_10,pe_50,pe_300,pb_500,pre_500,syb_50,syb_300
 
 index_all = []
 index_a_p = []
