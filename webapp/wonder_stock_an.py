@@ -16,7 +16,7 @@ in_path = r'E:/BC/data/wonder/'
 today = datetime.date.today()
 sd_stock = (datetime.date.today() + datetime.timedelta(days=-day_post)).strftime("%Y-%m-%d")
 ed = str(today)
-url_stock = "https://open.lixinger.com/api/cn/company/fundamental/non_financial"
+url_stock = "https://open.lixinger.com/api/cn/company/candlestick"
 token = "17871030-d55c-4562-b166-2ac0b5682a0f"
 headers = {
     "Content-Type": "application/json",
@@ -26,18 +26,19 @@ headers = {
 
 def stock_data_get(stock_codes):
     js_stock = json.loads(requests.post(url=url_stock, data=json.dumps(
-        {"token": token, "startDate": sd_stock, "endDate": ed, "stockCodes": [stock_codes],
-         "metricsList": ["fc_rights"]}), headers=headers).text)
+        {"token": token, "type": "lxr_fc_rights", "startDate": sd_stock, "endDate": ed, "stockCode": stock_codes}),
+                                        headers=headers).text)
+    print(js_stock)
     stock_60ud = js_stock['data'][::-1]
     stock = pd.DataFrame(stock_60ud)
     stock.set_index(["date"], inplace=True)
     stock.index = pd.DatetimeIndex(stock.index)
-    stock.index=stock.index.date
-    price_stock = (list(stock.iloc[:, 0]))
+    stock.index = stock.index.date
+    price_stock = (list(stock.iloc[:, 1]))
     for i in range(day_set, len(price_stock)):
         k = len(list(filter(lambda x: x <= price_stock[i], price_stock[i - day_set:i])))
         if k < threshold_value:
-            print(stock_codes, stock.index[i], price_stock[i], 10 * ' ' + str(k))
+            print(stock_codes, stock.index[i], round(price_stock[i], 1), 10 * ' ' + str(k))
 
 
-stock_data_get('300347')
+stock_data_get('002271')

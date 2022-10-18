@@ -14,7 +14,7 @@ in_path = r'E:/BC/data/wonder/'
 # SYB.index = pd.DatetimeIndex(SYB.index)
 today = datetime.date.today()
 # index_stock = str(today.replace(year=today.year - cal_year))
-start_day = "2018-01-01"
+start_day = "2015-01-01"
 ed = str(today)
 url1 = "https://open.lixinger.com/api/cn/index/fundamental"  # 指数基本面
 url2 = "https://open.lixinger.com/api/macro/national-debt"  # 国债
@@ -126,7 +126,8 @@ def add_one(x):
     return datetime.datetime.strptime(x, '%Y-%m-%d').date() + datetime.timedelta(days=1)
 
 
-print("最新财报增长为：", increase['data'][0]["standardDate"])
+print("最新财报增长为：", increase)
+# print("最新财报增长为：", increase['data'][0]["standardDate"])
 for i_increase in range(0, 5):
     print(round(100 * increase['data'][i_increase]["q"]["ps"]["oi"]["c_y2y"], 2),
           round(100 * increase['data'][i_increase]["q"]["ps"]["np"]["c_y2y"], 2))
@@ -161,8 +162,6 @@ d1.index.name = 'time'
 d2.index = pd.DatetimeIndex(d2.index)
 d2.index.name = 'time'
 
-print('指数         当前PE       当前PB     最大PE     最小PE     最大PB     最小PB,')
-
 
 def pe_pb(identifier, id_pe, id_pb, point):  # str
     def lim_map(x):
@@ -187,6 +186,7 @@ def pe_pb(identifier, id_pe, id_pb, point):  # str
          round(limit_high_pe / limit_high_pb, 3)])
 
 
+print('指数         点位        当前PE     当前PB    最大PE    最小PE    最大PB   最小PB')
 pe_pb('上证50  ', 'pe_50', 'pb_50', s50['data'][0]['cp'])
 pe_pb('沪深300 ', 'pe_300', 'pb_300', s300['data'][0]['cp'])
 pe_pb('中证500 ', 'pe_500', 'pb_500', s500['data'][0]['cp'])
@@ -194,14 +194,9 @@ pe_pb('中证1000', 'pe_1000', 'pb_1000', s1000['data'][0]['cp'])
 pe_pb('国证2000', 'pe_2000', 'pb_2000', s2000['data'][0]['cp'])
 for lim in range(len(limit)):
     print(limit[lim])
-print('券最新日期:', sy['data'][0]['date'].split('T')[0], len(p_s_i), len(p_y_i))  # 债券最新日期
-SYB = pd.merge(d2, d1, on='time', how='inner')
-SYB['syb_50'] = 1 / SYB['pe_50'] / SYB['y_10']
-SYB['syb_300'] = 1 / SYB['pe_300'] / SYB['y_10']
-print(SYB.iloc[:2, :])
 
 
-def cal_temp(da, axr=0):  # 将估值数据百分位化
+def cal_temp(da):  # 将估值数据百分位化
     dp = [0]
     count = 0
     result = []
@@ -210,24 +205,42 @@ def cal_temp(da, axr=0):  # 将估值数据百分位化
             if da[k1] != 0:
                 dp.append(da[k1])
             for n1 in range(len(dp)):
-                if dp[n1] < da[k1]:
+                if dp[n1] > da[k1]:
                     count += 1
-            if axr == 0:
-                result.append(round(count * 100 / len(dp), 5))
-            if axr == 1:
-                result.append(round(100 - count * 100 / len(dp), 5))
+            result.append(round(count * 100 / len(dp), 5))
             count = 0
         return result[-1]
 
 
-temp_50 = 100 - (cal_temp(list(SYB['syb_50'])[::-1]))  # 50股债收益比百分位
-temp_300 = 100 - (cal_temp(list(SYB['syb_300'])[::-1]))  # 300股债收益比百分位
-temp_500 = (cal_temp(list(SYB['pb_500'])[::-1]))  # 500PB百分位
+d1['2000/50'] = d1['pe_2000'] / d1['pe_50']
+d1['2000/300'] = d1['pe_2000'] / d1['pe_300']
+d1['1000/50'] = d1['pe_1000'] / d1['pe_50']
+d1['1000/300'] = d1['pe_1000'] / d1['pe_300']
+temp25 = cal_temp(list(d1['2000/50']))
+temp23 = cal_temp(list(d1['2000/300']))
+temp15 = cal_temp(list(d1['1000/50']))
+temp13 = cal_temp(list(d1['1000/300']))
+print('*' * 40)
+print('2.506-5.798 |   2.144-4.413   |   2.017-6.079   |   1.796-4.626')
+#      2.506-5.798 | 2.144-4.413 | 2.017-6.079 | 1.796-4.626
+print('2000/50     %     2000/300    %     1000/50     %     1000/300   %')
+print('%.3f    %.2f    %.3f    %.2f    %.3f    %.2f    %.3f    %.2f' % (
+    d1.iloc[0, 10], temp25, d1.iloc[0, 11], temp23, d1.iloc[0, 12], temp15, d1.iloc[0, 13], temp13))
+print('国债利率最新日期:', sy['data'][0]['date'].split('T')[0], len(p_s_i), len(p_y_i))  # 债券最新日期
+SYB = pd.merge(d2, d1, on='time', how='inner')
+SYB['syb_50'] = 1 / SYB['pe_50'] / SYB['y_10']
+SYB['syb_300'] = 1 / SYB['pe_300'] / SYB['y_10']
+print(SYB.iloc[:2, :])
+temp_50 = 100 - (cal_temp(list(SYB['syb_50'])))  # 50股债收益比百分位
+temp_300 = 100 - (cal_temp(list(SYB['syb_300'])))  # 300股债收益比百分位
+temp_500 = (cal_temp(list(SYB['pb_500'])))  # 500PB百分位
 print('50|300:15高点2,1.5,19年初3.8,3.17,20疫情4.7,3.65')
 print('十年国债收益率  50股债收益比  50百分位   300股债收益比  300百分位   500PB    500百分位   ' + str(today))
 print('%.3f          %.3f        %.2f     %.3f         %.2f      %.3f     %.2f' % (
     100 * SYB.iloc[0, 0], SYB.iloc[0, -2], temp_50, SYB.iloc[0, -1], temp_300, SYB.iloc[0, 6], temp_500))
-# index_time | y_10,pe_50,pe_300,pb_500,pre_500,syb_50,syb_300
+# SYB   |d1没有债券列，要-1
+# 0-10  |  y_10,pe_50,pb_50,pe_300,pb_300,pe_500,pb_500,pe_1000,pb_1000,pe_2000,pb_2000
+# 11-16 | 2000/50,2000/300,1000/50,1000/300,syb_50,syb_300
 
 index_all = []
 index_a_p = []
@@ -247,5 +260,7 @@ def index_60ud(index_data):
 index_60ud(s50)
 index_60ud(s300)
 index_60ud(s500)
+index_60ud(s1000)
+index_60ud(s2000)
 print(index_a_p)
 print(index_all)
